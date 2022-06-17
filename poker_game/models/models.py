@@ -5,6 +5,7 @@ from typing import Optional
 from django.db import models
 from django.db.models import Sum, JSONField
 from django.contrib.postgres.fields import ArrayField
+from django.conf import settings
 
 from .textchoices import TransactionTypeChoice, RoundTypeChoice, PlayerTurnChoice, UserRoleTypeChoice
 
@@ -69,7 +70,7 @@ class UserTable(models.Model):
         on_delete=models.CASCADE
     )
     user = models.OneToOneField(
-        'user.User',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         unique=True
     )
@@ -83,7 +84,7 @@ class UserTransaction(models.Model):
     User Transaction table, count all transactions from user
     """
     user = models.ForeignKey(
-        'user.User',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='transactions'
     )

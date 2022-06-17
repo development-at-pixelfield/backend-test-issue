@@ -53,6 +53,7 @@ class PokerGame:
         table = [table for table in self.tables if table.table_key == table_key]
         return table[0] if table else None
 
+    @property
     def tables_list(self) -> List[GameTable]:
         return self.tables
 

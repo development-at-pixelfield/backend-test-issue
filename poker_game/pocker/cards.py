@@ -1,4 +1,5 @@
 import random
+from itertools import chain, product
 from typing import List
 
 
@@ -15,25 +16,14 @@ class CardDealer:
         Init dealer. Pass cards on hand.
         :param cards_on_hand:
         """
-        self.cards_on_hand = cards_on_hand if cards_on_hand else []
-        if self.cards_on_hand:
-            tmp = []
-            for item in self.cards_on_hand:
-                for single in item:
-                    tmp.append(single)
-            self.cards_on_hand = tmp
+        self.cards_on_hand = list(chain(*self.cards_on_hand)) if cards_on_hand else []
 
     def cards_generator(self):
         """
-        Generates 52 cards and append them into deck,
+        Generates 52 cards and set them to deck,
         check duplicates
         """
-        self.deck = []
-        [
-            self.deck.append([value, suit])
-            for value in self._cards_values for suit in self._cards_suits
-            if [value, suit] not in self.cards_on_hand
-        ]
+        self.deck = list(product(self._cards_suits, self._cards_values))
         return self.deck
 
     def cards_shuffle(self):
@@ -41,48 +31,71 @@ class CardDealer:
         for i in range(3):
             random.shuffle(self.deck)
 
+    @property
     def cards_list(self):
         """return cards List"""
         return self.deck
+
+    def add_cards_to_players(self, players, amount: int):
+        """
+        takes 'amount' cards from deck list, removes this two cards from deck and put in active_players_cards
+        :param: players - active_players list from python PokerGame class
+        :param: amount - amount of cards for each user
+        """
+        active_players_cards = {}
+
+        for player in players:
+            active_players_cards[player.id] = self.deck[0:amount]
+            self.deck = self.deck[amount:]
+
+        return active_players_cards
 
     def add_two_to_player_hand(self, players):
         """
         takes 2 cards from deck list, removes this two cards from deck and put in active_players_cards
         :param: players - active_players list from python PokerGame class
         """
-        active_players_cards = {}
-        for player in players:
-            cards = [self.deck[0], self.deck[1]]
-            [self.deck.remove(card) for card in cards]
-            active_players_cards[player.id] = cards
-        return active_players_cards
+        return self.add_cards_to_players(players, 2)
+
+    def add_cards_on_table(self, amount: int):
+        """
+        Takes(removes) 'amount' cards from deck and returns them
+        """
+
+        assert amount > 0
+
+        cards_on_table = {
+            'table': self.deck[0:amount]
+        }
+        self.deck = self.deck[amount:]
+        return cards_on_table
 
     def add_three_on_table(self):
         """
         takes three cards from  and remove them from deck
         :return:
         """
-        cards_on_table = {}
-        cards = self.deck[0:3]
-        [self.deck.remove(card) for card in cards]
-        cards_on_table['table'] = cards
-        return cards_on_table
+        return self.add_cards_on_table(3)
 
     def add_one_on_table(self):
         """
         takes three cards from  and remove them from deck
         :return:
         """
-        cards_on_table = {}
-        card = self.deck[0]
-        self.deck.remove(card)
-        cards_on_table['table'] = card
-        return cards_on_table
+        return self.add_cards_on_table(1)
 
-    def add_to_table(self, is_flop=False):
+    def add_on_table(self, is_flop=False):
+
         counts = 3 if is_flop else 1
-        cards_on_table = {}
+
+        # pick random 'counts' elements
         cards = random.sample(self.deck, counts)
-        [self.deck.remove(card) for card in cards]
-        cards_on_table['table'] = cards
-        return cards_on_table
+
+        # delete them from deck
+        for card in cards:
+            self.deck.remove(card)
+
+        # return it
+        return {
+            'table': cards
+        }

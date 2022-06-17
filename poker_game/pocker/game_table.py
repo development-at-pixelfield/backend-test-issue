@@ -27,21 +27,25 @@ class GameTable:
         self.card_dealer = CardDealer()
         self.active_players: List[Player] = []
 
-    def get_card_dealer(self):
+    @property
+    def card_dealer(self):
         return self.card_dealer
 
+    @property
     def players(self):
-        return [self._players[player_id] for player_id in self._seats if player_id is not None]
+        return [
+            self._players[player_id] for player_id in self._seats
+            if player_id is not None
+        ]
 
+    @property
     def players_counts(self):
-        return len(self.players())
+        return len(self.players)
 
     def append_player_to_active(self, player):
         self.active_players.append(player)
 
-    def get_active_players(self):
-        return self.active_players
-
+    @property
     def seats(self):
         return list(self._seats)
 

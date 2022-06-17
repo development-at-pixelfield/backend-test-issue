@@ -17,10 +17,14 @@ class GameMessagesProtocol:
         :param auth_success:
         :return:
         """
+
         data = {
             'a_u': int(auth_success)
         }
-        return GameMessagesProtocol.format_response(AuthSerializer(instance=data).data)
+
+        return GameMessagesProtocol.format_response(
+            AuthSerializer(instance=data).data
+        )
 
     @staticmethod
     def table_status(
