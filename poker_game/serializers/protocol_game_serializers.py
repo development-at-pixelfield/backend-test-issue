@@ -9,9 +9,9 @@ from user.models import User
 from poker_game.textchoices import RoundTypeChoice
 
 
-
 def format_cards_response(data: List[List]):
     return ["".join(map(str, item)) for item in data]
+
 
 class BaseGameSerializer(serializers.Serializer):
     """
@@ -21,19 +21,6 @@ class BaseGameSerializer(serializers.Serializer):
     def __init__(self, with_label_representation: bool = False, **kwargs):
         super().__init__(**kwargs)
         self.with_label_representation = with_label_representation
-
-    def create(self, validated_data):
-        """
-        :param validated_data:
-        :return:
-        """
-
-    def update(self, instance, validated_data):
-        """
-        :param instance:
-        :param validated_data:
-        :return:
-        """
 
     def get_user(self) -> "User":
         return self.context.get("current_user")
@@ -66,9 +53,6 @@ class AuthSerializer(BaseGameSerializer):
     """
     a_u = serializers.IntegerField()
 
-    class Meta:
-        fields = "__all__"
-
 
 class LastBetInfoSerializer(serializers.Serializer):
     """
@@ -77,9 +61,6 @@ class LastBetInfoSerializer(serializers.Serializer):
     bt_a = serializers.IntegerField(label="Bet amount")
     bt_ui = serializers.IntegerField(label="User id")
     bt_ua = serializers.CharField(label="User username")
-
-    class Meta:
-        fields = "__all__"
 
 
 class PlayerGameSerializer(BaseGameSerializer):
@@ -257,9 +238,6 @@ class RoundGameSerializer(BaseGameSerializer):
         """
         return model.get_min_bet_amount()
 
-    class Meta:
-        fields = "__all__"
-
 
 class UserTurnPossibility(BaseGameSerializer):
     """
@@ -347,9 +325,6 @@ class PlayerTurnSerializer(BaseGameSerializer):
         }
 
         return UserTurnPossibility(instance=data).data
-
-    class Meta:
-        fields = "__all__"
 
 
 class TableGameSerializer(BaseGameSerializer):
@@ -472,6 +447,3 @@ class TableGameSerializer(BaseGameSerializer):
             with_label_representation=self.with_label_representation
         )
         return serializer.data
-
-    class Meta:
-        fields = "__all__"

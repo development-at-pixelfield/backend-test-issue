@@ -27,6 +27,7 @@ class Player:
     def seat_index(self) -> int:
         return self._seat_index
 
+    @property
     def user_info(self):
         return {
             "id": self.id,
@@ -43,7 +44,7 @@ class Player:
         self._cash -= cash
 
     def add_cash(self, cash: int):
-        if cash <= 0.0:
+        if cash <= 0:
             raise ValueError("Money has to be a positive amount")
         self._cash += cash
 

@@ -2,12 +2,11 @@ import socket
 import socketserver
 import threading
 import os
+from settings import TCP_HOST, TCP_PORT
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
 
-
-from settings import TCP_HOST, TCP_PORT
 
 class ThreadedTCPRequestHandler(socketserver.BaseRequestHandler):
     def handle(self):

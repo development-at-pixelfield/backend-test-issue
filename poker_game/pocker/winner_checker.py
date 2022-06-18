@@ -1,16 +1,16 @@
 from treys import Evaluator, Card
 
 def cards_parser(cards: dict):
-    new_dict = {}
-    for key in cards.keys():
-        new_dict[key] = []
+    parsed_cards = {}
+
     for owner, card in cards.items():
+        parsed_cards[owner] = []
         for values in card:
             if values[1] == 10:
                 values[1] = 'T'
             new_card = f'{values[1]}{values[0].lower()}'
-            new_dict[owner].append(new_card)
-    return new_dict
+            parsed_cards[owner].append(new_card)
+    return parsed_cards
 
 
 def check_the_winner(cards: dict):
@@ -32,4 +32,6 @@ def check_the_winner(cards: dict):
         print(f'cls_str: {cls_str}')
         evaluates.append([user_cards[0], ev, cls_str])
 
-    return [i for i in evaluates if i[1] == min([evaluate[1] for evaluate in evaluates])]
+    min_evaluate = [evaluate[1] for evaluate in evaluates]
+
+    return [i for i in evaluates if i[1] == min(min_evaluate)]
